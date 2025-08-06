@@ -263,21 +263,21 @@
 
 		    try {
 		        const rsvpForm = document.getElementById('rsvp-form');
-const googleScriptUrl = 'https://script.google.com/macros/s/AKfycbxw8oK4xjjrB1R-Uf-NX_yzKv5pnGSUucpSNtOW3NFIPDlINdIVmIy2F_LUut0dXgE/exec'; // your URL
+			const googleScriptUrl = 'https://script.google.com/macros/s/AKfycbxw8oK4xjjrB1R-Uf-NX_yzKv5pnGSUucpSNtOW3NFIPDlINdIVmIy2F_LUut0dXgE/exec'; // your URL
 
-rsvpForm.addEventListener('submit', async (event) => {
-  event.preventDefault();
+			rsvpForm.addEventListener('submit', async (event) => {
+			  event.preventDefault();
 
-  const attending = document.querySelector('input[name="attending"]:checked');
-  const nameInput = document.getElementById('name');
-  const name = attending && attending.value === 'yes' ? nameInput.value.trim() : 'N/A';
+ 			 const attending = document.querySelector('input[name="attending"]:checked');
+ 			 const nameInput = document.getElementById('name');
+ 			 const name = attending && attending.value === 'yes' ? nameInput.value.trim() : 'N/A';
 
-  if (!attending) {
-    alert('Please select whether you will be attending.');
-    return;
+  		if (!attending) {
+  			  alert('Please select whether you will be attending.');
+  		  return;
   }
 
-  const formData = new URLSearchParams();
+  		const formData = new URLSearchParams();
   formData.append('name', name);
   formData.append('attending', attending.value);
 
