@@ -131,14 +131,14 @@
         <!-- Main Invitation Section -->
         <header class="text-center">
             <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">You're Invited! ✨</h1>
-            <p class="text-lg md:text-xl text-gray-400">Join us for a cosmic celebration of Sayar Lin's 20th Birthday! 🚀</p>
+            <p class="text-lg md:text-xl text-gray-400">Join us for a cosmic celebration of Jane's 30th Birthday! 🚀</p>
         </header>
 
         <section class="my-8 text-center">
             <div class="bg-gray-800 p-6 rounded-xl shadow-inner inline-block border border-[#00F88D] border-opacity-30">
-                <p class="text-2xl font-bold text-[#00F88D]">Date: <span class="font-normal text-gray-200">Saturday, August 23rd</span></p>
-                <p class="text-2xl font-bold text-[#00F88D]">Time: <span class="font-normal text-gray-200">1:00 PM onwards</span></p>
-                <p class="text-2xl font-bold text-[#00F88D]">Location: <span class="font-normal text-gray-200">Check Google Map Below</span></p>
+                <p class="text-2xl font-bold text-[#00F88D]">Date: <span class="font-normal text-gray-200">Saturday, October 26th</span></p>
+                <p class="text-2xl font-bold text-[#00F88D]">Time: <span class="font-normal text-gray-200">7:00 PM onwards</span></p>
+                <p class="text-2xl font-bold text-[#00F88D]">Location: <span class="font-normal text-gray-200">The Secret Garden Lounge</span></p>
             </div>
         </section>
         
@@ -146,27 +146,32 @@
         <section class="mt-8">
             <h2 class="text-3xl font-bold">Party Agenda 🤖</h2>
             <ul class="list-disc list-inside mt-4 text-lg text-gray-200 space-y-2">
-                <li>1:00 PM - 4:00 PM: Check-in, Welcome Drink & Chill Music</li>
-                <li>4:00 PM - 6:00 PM: Swimming & BBQ Session</li>
-                <li>7:00 PM - 9:00 PM: Chill DJ Set</li>
-                <li>9:00 PM onwards: Music, Drink and Dance</li>
-				<p> Agenda is flexiable. Do whatever make you fun.</p>
+                <li>7:00 PM - 8:00 PM: Welcome drinks & mingling</li>
+                <li>8:00 PM - 9:00 PM: Dinner buffet opens</li>
+                <li>9:00 PM - 9:30 PM: Birthday toast & cake cutting</li>
+                <li>9:30 PM onwards: Music, dancing & celebration!</li>
             </ul>
         </section>
 
         <!-- RSVP Section -->
         <section class="mt-8 rsvp-form-container">
             <h2 class="text-3xl font-bold mb-4">RSVP Terminal</h2>
-            <form id="rsvp-form" class="space-y-4">
+            <!--
+                IMPORTANT: Replace "https://formspree.io/f/YOUR_FORMSPREE_FORM_ID" with your actual Formspree endpoint.
+                1. Go to formspree.io and create a new form.
+                2. Copy the endpoint URL they provide (it will look like https://formspree.io/f/xxxxxxx).
+                3. Paste it here.
+            -->
+            <form id="rsvp-form" action="https://formspree.io/f/mwpqrzee" method="POST" class="space-y-4">
                 <div class="text-lg">
                     <p class="font-semibold text-gray-200">Will you be attending?</p>
                     <div class="mt-2 flex space-x-6">
                         <label class="flex items-center space-x-2 cursor-pointer">
-                            <input type="radio" name="attending" value="yes" class="form-radio text-[#00F88D] focus:ring-[#00F88D] h-5 w-5">
+                            <input type="radio" name="attending" value="yes" class="form-radio text-[#00F88D] focus:ring-[#00F88D] h-5 w-5" required>
                             <span class="text-gray-200">Affirmative</span>
                         </label>
                         <label class="flex items-center space-x-2 cursor-pointer">
-                            <input type="radio" name="attending" value="no" class="form-radio text-[#00F88D] focus:ring-[#00F88D] h-5 w-5">
+                            <input type="radio" name="attending" value="no" class="form-radio text-[#00F88D] focus:ring-[#00F88D] h-5 w-5" required>
                             <span class="text-gray-200">Negative</span>
                         </label>
                     </div>
@@ -218,8 +223,10 @@
         const nameInput = document.getElementById('name');
         const messageBox = document.getElementById('message-box');
 
-        const toggleNameField = (event) => {
-            if (event.target.value === 'yes') {
+        // This function now just toggles the name field visibility based on radio selection
+        const toggleNameField = () => {
+            const selectedAttending = document.querySelector('input[name="attending"]:checked');
+            if (selectedAttending && selectedAttending.value === 'yes') {
                 nameField.classList.remove('hidden');
                 nameInput.setAttribute('required', 'required');
             } else {
@@ -231,6 +238,9 @@
         attendingRadios.forEach(radio => {
             radio.addEventListener('change', toggleNameField);
         });
+
+        // Initial check in case a radio button is pre-selected (though not in this HTML)
+        toggleNameField();
 
         const showMessageBox = (message, isError = false) => {
             messageBox.textContent = message;
@@ -246,51 +256,49 @@
             }, 3000);
         };
 
-		rsvpForm.addEventListener('submit', async (event) => {
-		    event.preventDefault();
+        // Formspree handles the submission, so we just need to show a local message
+        rsvpForm.addEventListener('submit', (event) => {
+            // Formspree will handle the actual submission via the 'action' attribute
+            // We prevent default only to control the success/error message display
+            // and prevent the page from navigating away immediately if we want custom messages.
+            // If you want Formspree's default success page, remove event.preventDefault()
+            // and the custom message logic.
 
-		    const attending = document.querySelector('input[name="attending"]:checked');
+            const attending = document.querySelector('input[name="attending"]:checked');
+            const guestName = nameInput.value.trim();
 
-		    if (!attending) {
-		        showMessageBox('Please select whether you will be attending.', true);
-		        return;
-		    }
+            if (!attending) {
+                showMessageBox('Please select whether you will be attending.', true);
+                event.preventDefault(); // Prevent submission if no option is selected
+                return;
+            }
 
-		    const formData = {
-		        attending: attending.value,
-		        name: attending.value === 'yes' ? nameInput.value.trim() : 'N/A'
-		    };
+            if (attending.value === 'yes' && guestName === '') {
+                showMessageBox('Please enter your name if you are attending.', true);
+                event.preventDefault(); // Prevent submission if name is missing for 'yes'
+                return;
+            }
 
-		    try {
-		        const googleScriptUrl = 'https://script.google.com/macros/s/AKfycbxw8oK4xjjrB1R-Uf-NX_yzKv5pnGSUucpSNtOW3NFIPDIINdlVmlyw2F_LUut0dXgE/exec'; // PASTE YOUR URL HERE
+            // If all checks pass, allow Formspree to handle the submission
+            // Formspree will redirect to a success page by default, or you can configure AJAX.
+            // For a simple setup, we'll let it redirect.
+            // If you want to stay on the page and show a message, you'll need Formspree's AJAX feature:
+            // https://formspree.io/docs/forms/ajax/
 
-		        const response = await fetch(googleScriptUrl, {
-		            method: 'POST',
-		            headers: {
-		                'Content-Type': 'application/json'
-		            },
-		            body: JSON.stringify(formData)
-		        });
-
-		        // Handle the response from Google Apps Script
-		        if (response.ok) {
-		            if (formData.attending === 'yes') {
-		                showMessageBox(`Transmission received, ${formData.name}! Your presence is confirmed.`);
-		            } else {
-		                showMessageBox('Transmission received. We will miss you! See you in next party.');
-		            }
-		        } else {
-		            showMessageBox(`Error: Failed to submit form.`, true);
-		        }
-		    } catch (error) {
-		        showMessageBox(`Failed to connect to the server. Please try again.`, true);
-		        console.error('Fetch error:', error);
-		    }
-
-		    rsvpForm.reset();
-		    nameField.classList.add('hidden');
-		});
-        
+            // For now, let's just show a message and let the form submit normally (which will redirect)
+            // If you want to stay on the page and show the message, you'll need Formspree's AJAX setup.
+            // For simplicity, we'll let it redirect.
+            if (attending.value === 'yes') {
+                showMessageBox(`Submitting RSVP for ${guestName}...`);
+            } else {
+                showMessageBox('Submitting RSVP...');
+            }
+            
+            // The form will now submit to Formspree via its action attribute.
+            // Formspree will handle the redirect to its success page or your configured redirect.
+            // If you want to stay on the page and show a message, you'd integrate Formspree's AJAX.
+            // For simplicity, we'll let it redirect.
+        });
     </script>
 </body>
 </html>
